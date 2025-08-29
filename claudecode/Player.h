@@ -7,6 +7,8 @@
 #include "Colors.h"
 #include "Skill.h"
 #include "Item.h"
+#include "AudioManager.h"
+#include "SoundEffects.h"
 using namespace std;
 
 // 基础角色类
@@ -91,6 +93,9 @@ public:
     void levelUp() {
         exp -= level * 100;  // 消耗经验值
         level++;
+        
+        // 播放升级音效
+        AudioManager::getInstance().playSoundEffect(SoundEffects::LEVEL_UP);
         
         // 属性提升
         int oldMaxHP = maxHP;

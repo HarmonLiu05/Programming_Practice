@@ -164,18 +164,17 @@ private:
         Colors::printSubSeparator(60);
         
         cout << "  ";
-        Colors::printCyan("当前位置: ");
-        Colors::printWhite("(" + to_string(playerX) + ", " + to_string(playerY) + ")");
-        cout << "      ";
         Colors::printCyan("已击败怪物: ");
         if (monstersDefeated >= 15) {
             Colors::printGreen(to_string(monstersDefeated) + "/15");
         } else {
             Colors::printYellow(to_string(monstersDefeated) + "/15");
         }
+        cout << "      ";
+        Colors::printCyan("当前位置: ");
+        Colors::printWhite("(" + to_string(playerX) + ", " + to_string(playerY) + ")");
         cout << endl;
         
-        Colors::printInfo("探索未知区域发现更多房间和怪物！");
         Colors::printSeparator(60);
     }
 };

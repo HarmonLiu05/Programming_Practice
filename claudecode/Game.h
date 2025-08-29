@@ -8,6 +8,7 @@
 #include "Enemy.h"
 #include "Battle.h"
 #include "SaveGame.h"
+#include "AudioManager.h"
 #include <iostream>
 #include <string>
 
@@ -61,6 +62,13 @@ public:
         Colors::printTitle("重返崂山!");
         Colors::printSuccess("欢迎来到回合制RPG冒险游戏！");
         
+        // 初始化音频系统
+        AudioManager& audioManager = AudioManager::getInstance();
+        if (audioManager.initialize()) {
+            // 播放背景音乐
+            audioManager.playBackgroundMusic("music/DDRKirby(ISQ) - Dawn.mp3");
+        }
+        
         // 显示开始菜单
         showStartMenu();
         
@@ -70,6 +78,9 @@ public:
             
             gameLoop();
         }
+        
+        // 清理音频资源
+        audioManager.cleanup();
     }
     
     void gameLoop() {
