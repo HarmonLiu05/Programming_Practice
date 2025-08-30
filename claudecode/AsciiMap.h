@@ -11,7 +11,7 @@ using namespace std;
 
 class AsciiMapRenderer {
 private:
-    static const int WIDTH = 7;
+    static const int WIDTH = 8;
     static const int HEIGHT = 3;
     
     // 每个房间的ASCII艺术表示（3行x5列）
@@ -165,10 +165,10 @@ private:
         
         cout << "  ";
         Colors::printCyan("已击败怪物: ");
-        if (monstersDefeated >= 15) {
-            Colors::printGreen(to_string(monstersDefeated) + "/15");
+        if (monstersDefeated >= 12) {
+            Colors::printGreen(to_string(monstersDefeated) + "/12");
         } else {
-            Colors::printYellow(to_string(monstersDefeated) + "/15");
+            Colors::printYellow(to_string(monstersDefeated) + "/12");
         }
         cout << "      ";
         Colors::printCyan("当前位置: ");

@@ -25,7 +25,6 @@ enum class SkillType {
     WEALTH_STRIKE,   // 财富一击
     LUCKY_DICE,      // 运气骰子
     SHARED_FATE,     // 同生共死
-    MIMIC,           // 模仿
     REVERSAL,        // 起死回生
     FOUL_PLAY        // 欺诈
 };
@@ -178,12 +177,6 @@ public:
                         SkillType::SHARED_FATE, SkillRarity::EPIC);
     }
     
-    // 模仿
-    static Skill* createMimic() {
-        return new Skill("模仿", "模仿敌人上次技能，75%效果", 
-                        SkillType::MIMIC, SkillRarity::RARE);
-    }
-    
     // 起死回生
     static Skill* createReversal() {
         return new Skill("起死回生", "血量越少伤害越高（低血量时400%伤害）", 
@@ -201,7 +194,7 @@ public:
         vector<Skill*(*)()> skillCreators = {
             createExecute, createLifeSiphon, createRevenge, createMarkedForDeath,
             createCriticalHit, createWeaknessStrike, createWealthStrike, 
-            createLuckyDice, createSharedFate, createMimic, 
+            createLuckyDice, createSharedFate, 
             createReversal, createFoulPlay
         };
         
@@ -220,7 +213,6 @@ public:
         else if (name == "财富一击") return createWealthStrike();
         else if (name == "运气骰子") return createLuckyDice();
         else if (name == "同生共死") return createSharedFate();
-        else if (name == "模仿") return createMimic();
         else if (name == "起死回生") return createReversal();
         else if (name == "欺诈") return createFoulPlay();
         else return createCriticalHit(); // 默认返回致命一击
@@ -235,8 +227,7 @@ public:
                 return rand() % 3 == 0 ? createLifeSiphon() : 
                        rand() % 2 == 0 ? createCriticalHit() : createLuckyDice();
             case SkillRarity::RARE:
-                return rand() % 3 == 0 ? createRevenge() : 
-                       rand() % 2 == 0 ? createMarkedForDeath() : createMimic();
+                return rand() % 2 == 0 ? createRevenge() : createMarkedForDeath();
             case SkillRarity::EPIC:
                 return rand() % 3 == 0 ? createExecute() : 
                        rand() % 2 == 0 ? createSharedFate() : createFoulPlay();

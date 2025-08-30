@@ -13,7 +13,7 @@ using namespace std;
 
 class Map {
 private:
-    static const int WIDTH = 7;
+    static const int WIDTH = 8;
     static const int HEIGHT = 3;
     Room* rooms[HEIGHT][WIDTH];
     int playerX, playerY;

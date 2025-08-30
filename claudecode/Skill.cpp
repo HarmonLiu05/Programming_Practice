@@ -143,21 +143,6 @@ bool Skill::useSkill(Player& user, Character& target) {
             break;
         }
         
-        case SkillType::MIMIC:
-        {
-            // 模仿：模仿敌人上次技能的75%效果
-            if (lastEnemySkill.empty()) {
-                Colors::printWarning("敌人尚未使用技能，无法模仿！");
-                return false;
-            }
-            damage = (user.getAttack() * 75) / 100; // 简化实现
-            target.takeDamage(damage);
-            Colors::printMagenta("使用技能: " + name);
-            Colors::printBlue("模仿敌人技能！");
-            Colors::printRed("造成 " + to_string(damage) + " 点伤害！");
-            break;
-        }
-        
         case SkillType::REVERSAL:
         {
             // 起死回生：血量越少伤害越高

@@ -173,6 +173,20 @@ public:
                     }
                     break;
                     
+                case 't': case 'T':
+                    // 音乐开关控制
+                    {
+                        AudioManager& audioManager = AudioManager::getInstance();
+                        if (audioManager.isBackgroundMusicPlaying()) {
+                            audioManager.stopBackgroundMusic();
+                            Colors::printInfo("背景音乐已关闭");
+                        } else {
+                            audioManager.playBackgroundMusic("music/DDRKirby(ISQ) - Dawn.mp3");
+                            Colors::printInfo("背景音乐已开启");
+                        }
+                    }
+                    break;
+                    
                 default:
                     cout << "无效指令！按 H 查看帮助。" << endl;
                     break;
@@ -225,6 +239,22 @@ public:
                         for (const auto& reward : rewards) {
                             if (reward.type == DropType::SKILL) {
                                 player->addSkill(new Skill(*reward.skill)); // 创建技能副本
+                            } else if (reward.type == DropType::POTION) {
+                                // 处理道具掉落 - 根据掉落物名称创建对应的道具
+                                if (reward.name == "小血瓶" || reward.name == "治疗药水") {
+                                    player->addItem(ItemFactory::createHealingPotion());
+                                } else if (reward.name == "能量凝胶") {
+                                    player->addItem(ItemFactory::createEnergyGel());
+                                } else if (reward.name == "急救喷雾") {
+                                    player->addItem(ItemFactory::createFirstAidSpray());
+                                } else if (reward.name == "大血瓶") {
+                                    player->addItem(ItemFactory::createFirstAidSpray()); // 大血瓶用急救喷雾代替
+                                } else if (reward.name == "特级血瓶") {
+                                    player->addItem(ItemFactory::createRoastChicken()); // 特级血瓶用烤鸡代替
+                                } else {
+                                    // 默认给治疗药水
+                                    player->addItem(ItemFactory::createHealingPotion());
+                                }
                             }
                         }
                         
@@ -279,7 +309,7 @@ public:
             }
                 
             case RoomType::BOSS:
-                if (gameMap->getMonstersDefeated() >= 15) {
+                if (gameMap->getMonstersDefeated() >= 12) {
                     Colors::printTitle("最终挑战");
                     Colors::printRed("崂山龙王出现了！");
                     
@@ -297,6 +327,22 @@ public:
                         for (const auto& reward : rewards) {
                             if (reward.type == DropType::SKILL) {
                                 player->addSkill(new Skill(*reward.skill));
+                            } else if (reward.type == DropType::POTION) {
+                                // 处理道具掉落 - 根据掉落物名称创建对应的道具
+                                if (reward.name == "小血瓶" || reward.name == "治疗药水") {
+                                    player->addItem(ItemFactory::createHealingPotion());
+                                } else if (reward.name == "能量凝胶") {
+                                    player->addItem(ItemFactory::createEnergyGel());
+                                } else if (reward.name == "急救喷雾") {
+                                    player->addItem(ItemFactory::createFirstAidSpray());
+                                } else if (reward.name == "大血瓶") {
+                                    player->addItem(ItemFactory::createFirstAidSpray()); // 大血瓶用急救喷雾代替
+                                } else if (reward.name == "特级血瓶") {
+                                    player->addItem(ItemFactory::createRoastChicken()); // 特级血瓶用烤鸡代替
+                                } else {
+                                    // 默认给治疗药水
+                                    player->addItem(ItemFactory::createHealingPotion());
+                                }
                             }
                         }
                         
@@ -320,7 +366,7 @@ public:
                     Colors::printRed("一股强大的威压阻止了你前进...");
                     Colors::printWarning("你还没有准备好面对BOSS。");
                     cout << "  需要先击败 ";
-                    Colors::printYellow(to_string(15 - gameMap->getMonstersDefeated()));
+                    Colors::printYellow(to_string(12 - gameMap->getMonstersDefeated()));
                     cout << " 只普通怪物才能挑战BOSS。" << endl;
                     Colors::printInfo("先去其他房间寻找更多的怪物吧！");
                 }
@@ -413,7 +459,13 @@ public:
                 if (player->getGold() >= 100) {
                     if (player->getSkillCount() < player->getMaxSkills()) {
                         player->spendGold(100);
-                        Skill* newSkill = SkillFactory::createRandomSkill();
+                        // 商店提供高稀有度技能：70%传说，30%史诗
+                        Skill* newSkill;
+                        if (rand() % 100 < 70) {
+                            newSkill = SkillFactory::createRandomSkillByRarity(SkillRarity::LEGENDARY);
+                        } else {
+                            newSkill = SkillFactory::createRandomSkillByRarity(SkillRarity::EPIC);
+                        }
                         player->addSkill(newSkill);
                         Colors::printSuccess("购买成功！");
                     } else {
@@ -527,7 +579,9 @@ public:
         Colors::printWhite("Q");
         cout << "-退出游戏 ";
         Colors::printWhite("X");
-        cout << "-保存游戏" << endl;
+        cout << "-保存游戏 ";
+        Colors::printWhite("T");
+        cout << "-音乐开关" << endl;
         
         Colors::printSubSeparator(50);
     }
@@ -549,7 +603,7 @@ public:
     // 显示游戏控制说明（简化版）
     void displayGameControls() {
         Colors::printSubSeparator(60);
-        Colors::printInfo("控制: W/A/S/D-移动 | M-地图 P-状态 I-技能 B-道具 | Q-退出 X-保存 H-帮助");
+        Colors::printInfo("控制: W/A/S/D-移动 | M-地图 P-状态 I-技能 B-道具 | Q-退出 X-保存 T-音乐 H-帮助");
         cout << "\n请输入指令: ";
     }
     

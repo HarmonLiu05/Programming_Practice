@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "Colors.h"
 #include "Skill.h"
 #include "Item.h"
@@ -56,7 +57,7 @@ private:
     static const int MAX_ITEMS = 8;     // 最大道具数量
     
 public:
-    Player(string playerName = "勇者") : Character(playerName, 100, 15, 5, 1) {
+    Player(string playerName = "勇者") : Character(playerName, 150, 22, 8, 1) {
         exp = 0;
         gold = 100;
         
@@ -84,28 +85,25 @@ public:
         cout << endl;
         
         // 检查是否升级
-        int requiredExp = level * 100;
+        int requiredExp = level * 60;
         if (exp >= requiredExp) {
             levelUp();
         }
     }
     
     void levelUp() {
-        exp -= level * 100;  // 消耗经验值
+        exp -= level * 60;  // 消耗经验值
         level++;
-        
-        // 播放升级音效
-        AudioManager::getInstance().playSoundEffect(SoundEffects::LEVEL_UP);
         
         // 属性提升
         int oldMaxHP = maxHP;
         int oldAttack = attack;
         int oldDefense = defense;
         
-        maxHP += 20;
-        hp += 20;  // 升级时恢复血量
-        attack += 3;
-        defense += 2;
+        maxHP += 30;
+        hp += 30;  // 升级时恢复血量
+        attack += 5;
+        defense += 3;
         
         Colors::printSeparator(50);
         Colors::printTitle("等级提升!");
@@ -321,12 +319,20 @@ public:
             Colors::printTitle("技能背包");
             Colors::printInfo("拥有技能: " + to_string(skills.size()) + "/" + to_string(MAX_SKILLS));
             
-            for (size_t i = 0; i < skills.size(); i++) {
+            // 创建技能副本并按稀有度排序
+            vector<Skill*> sortedSkills = skills;
+            sort(sortedSkills.begin(), sortedSkills.end(), 
+                [](const Skill* a, const Skill* b) {
+                    return static_cast<int>(a->getRarity()) > static_cast<int>(b->getRarity());
+                });
+            
+            for (size_t i = 0; i < sortedSkills.size(); i++) {
                 cout << "  " << (i + 1) << ". ";
-                skills[i]->displayInfo();
+                sortedSkills[i]->displayInfo();
             }
             
             Colors::printInfo("技能使用说明: 战斗中按'2'使用技能，一次性消耗");
+            Colors::printGray("技能按稀有度排序: 传说→史诗→稀有→不常见→普通");
         }
         Colors::printSubSeparator(50);
     }

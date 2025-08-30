@@ -134,29 +134,29 @@ public:
     }
     
     void setupSlimeDrops() {
-        // 史莱姆掉落表：70%金币，25%普通技能，5%无掉落
+        // 史莱姆掉落表：提升技能掉落稀有度
         dropTable.push_back(DropItem(DropType::GOLD, 10 + rand() % 11)); // 10-20金币
-        dropTable.push_back(DropItem(DropType::SKILL, 0, SkillFactory::createWeaknessStrike()));
+        dropTable.push_back(DropItem(DropType::SKILL, 0, SkillFactory::createRandomSkillByRarity(SkillRarity::UNCOMMON)));
         dropTable.push_back(DropItem(DropType::NONE));
     }
     
     void setupGoblinDrops() {
-        // 哥布林掉落表：60%金币，35%技能，5%药水
+        // 哥布林掉落表：提升技能稀有度
         dropTable.push_back(DropItem(DropType::GOLD, 15 + rand() % 16)); // 15-30金币
-        dropTable.push_back(DropItem(DropType::SKILL, 0, SkillFactory::createCriticalHit()));
+        dropTable.push_back(DropItem(DropType::SKILL, 0, SkillFactory::createRandomSkillByRarity(SkillRarity::RARE)));
         dropTable.push_back(DropItem(DropType::POTION, 30, nullptr, "小血瓶"));
     }
     
     void setupSkeletonDrops() {
-        // 骷髅兵掉落表：50%技能，40%金币，10%药水
-        dropTable.push_back(DropItem(DropType::SKILL, 0, SkillFactory::createRandomSkillByRarity(SkillRarity::UNCOMMON)));
+        // 骷髅兵掉落表：50%史诗技能，40%金币，10%药水
+        dropTable.push_back(DropItem(DropType::SKILL, 0, SkillFactory::createRandomSkillByRarity(SkillRarity::EPIC)));
         dropTable.push_back(DropItem(DropType::GOLD, 20 + rand() % 21)); // 20-40金币
         dropTable.push_back(DropItem(DropType::POTION, 50, nullptr, "大血瓶"));
     }
     
     void setupOrcDrops() {
-        // 兽人掉落表：60%稀有技能，30%金币，10%药水
-        dropTable.push_back(DropItem(DropType::SKILL, 0, SkillFactory::createRandomSkillByRarity(SkillRarity::RARE)));
+        // 兽人掉落表：60%传说技能，30%金币，10%药水
+        dropTable.push_back(DropItem(DropType::SKILL, 0, SkillFactory::createRandomSkillByRarity(SkillRarity::LEGENDARY)));
         dropTable.push_back(DropItem(DropType::GOLD, 40 + rand() % 31)); // 40-70金币
         dropTable.push_back(DropItem(DropType::POTION, 100, nullptr, "特级血瓶"));
     }
@@ -177,10 +177,10 @@ public:
             
             // 根据敌人类型调整掉落率
             switch(enemyType) {
-                case EnemyType::SLIME: threshold = 70; break;
-                case EnemyType::GOBLIN: threshold = 80; break;
-                case EnemyType::SKELETON: threshold = 85; break;
-                case EnemyType::ORC: threshold = 90; break;
+                case EnemyType::SLIME: threshold = 95; break; // 提高史莱姆掉落率用于测试
+                case EnemyType::GOBLIN: threshold = 95; break; // 提高哥布林掉落率用于测试
+                case EnemyType::SKELETON: threshold = 95; break;
+                case EnemyType::ORC: threshold = 95; break;
                 case EnemyType::DRAGON: threshold = 100; break; // BOSS必掉
             }
             

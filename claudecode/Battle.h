@@ -92,7 +92,7 @@ private:
         
         // 玩家名称和等级（左侧）
         cout << "  ";
-        Colors::printCyan("勇者");
+        Colors::printCyan(player->getName());
         cout << " (等级 " << player->getLevel() << ")";
         
         // 敌人名称（右侧）
@@ -122,6 +122,12 @@ private:
             Colors::printRed(to_string(enemy->getHP()) + "/" + to_string(enemy->getMaxHP()));
         }
         cout << endl;
+        
+        // 玩家攻击力和防御力（左侧）
+        cout << "  攻击: ";
+        Colors::printYellow(to_string(player->getAttack()));
+        cout << " 防御: ";
+        Colors::printCyan(to_string(player->getDefense()));
         
         // 敌人攻击力和防御力（右侧）
         cout << "               攻击: ";
@@ -180,11 +186,6 @@ private:
         if (isCritical) {
             damage = (damage * 15) / 10; // 1.5倍伤害
             Colors::printYellow("暴击！");
-            // 播放暴击音效
-            AudioManager::getInstance().playSoundEffect(SoundEffects::CRITICAL_SOUND);
-        } else {
-            // 播放普通攻击音效
-            AudioManager::getInstance().playSoundEffect(SoundEffects::ATTACK_SOUND);
         }
         
         enemy->takeDamage(damage);
@@ -229,8 +230,6 @@ private:
         int skillIndex = choice - '1';
         if (skillIndex >= 0 && skillIndex < (int)skills.size()) {
             if (player->useSkill(skillIndex, *enemy)) {
-                // 播放技能音效
-                AudioManager::getInstance().playSoundEffect(SoundEffects::SKILL_SOUND);
                 return true;
             } else {
                 // 技能使用失败，重新选择
@@ -276,8 +275,6 @@ private:
         int itemIndex = choice - '1';
         if (itemIndex >= 0 && itemIndex < (int)inventory.size()) {
             if (player->useItemInBattle(itemIndex, *enemy)) {
-                // 播放道具使用音效
-                AudioManager::getInstance().playSoundEffect(SoundEffects::ITEM_SOUND);
                 return true;
             } else {
                 // 道具使用失败，重新选择
@@ -295,8 +292,6 @@ private:
         
         if (rand() % 100 < escapeChance) {
             Colors::printSuccess("你成功逃离了战斗！");
-            // 播放逃跑音效
-            AudioManager::getInstance().playSoundEffect(SoundEffects::ESCAPE_SOUND);
             battleEnded = true;
             playerWon = false;
             playerEscaped = true;  // 设置逃跑标志
@@ -317,8 +312,6 @@ private:
         Colors::printTitle("战斗胜利！");
         Colors::printSuccess("你击败了 " + enemy->getName() + "！");
         
-        // 播放胜利音效
-        AudioManager::getInstance().playSoundEffect(SoundEffects::VICTORY_SOUND);
         
         // 获得经验值和金币
         int exp = enemy->getExpReward();
@@ -368,8 +361,6 @@ private:
         Colors::printTitle("战斗失败...");
         Colors::printError("你被 " + enemy->getName() + " 击败了！");
         
-        // 播放失败音效
-        AudioManager::getInstance().playSoundEffect(SoundEffects::DEFEAT_SOUND);
         
         Colors::printWarning("游戏结束！");
         Colors::printSeparator(70);
